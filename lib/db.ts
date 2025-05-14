@@ -1,7 +1,9 @@
 import 'server-only';
 
-import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
+//import { neon } from '@neondatabase/serverless';
+//import { drizzle } from 'drizzle-orm/neon-http';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { Pool } from 'pg';
 import {
   pgTable,
   text,
@@ -14,7 +16,11 @@ import {
 import { count, eq, ilike } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 
-export const db = drizzle(neon(process.env.POSTGRES_URL!));
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL
+});
+
+export const db = drizzle(pool);
 
 export const statusEnum = pgEnum('status', ['active', 'inactive', 'archived']);
 
